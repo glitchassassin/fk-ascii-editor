@@ -163,7 +163,7 @@
 									window.prompt("Press Ctrl+C (or Cmd+C) to copy", delta_to_fk(this.quill.getContents()))
 								},
 								'export_escaped': function(value) {
-									window.prompt("Press Ctrl+C (or Cmd+C) to copy", delta_to_fk(this.quill.getContents().replace("\\", "\\\\")))
+									window.prompt("Press Ctrl+C (or Cmd+C) to copy", delta_to_fk(this.quill.getContents()).replace("\\", "\\\\"))
 								}
 							}
 						}
