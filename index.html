@@ -15,7 +15,7 @@
 			var background_colors_list = foreground_colors_list.slice(0,8)
 			var hexstring = "0123456789ABCDEF"
 			function delta_to_fk(delta) {
-			    var to_return = "{60}"
+			    var to_return = "{70}"
 			    for (var i in delta["ops"]) {
 			        var op = delta["ops"][i]
 			        console.log(op)
@@ -35,7 +35,7 @@
 			            to_return += "{" + color + background_color + "}"
 			        }
 			        if ("insert" in op) {
-			            to_return += op.insert.replace(/\n(?!{..})/, "\n{60}")
+			            to_return += op.insert.replace(/\n(?!{..})/, "\n{70}")
 			        }
 			        if (to_return.match(/{..}$/)) {
 			            to_return = to_return.slice(0,-4) // Avoiding superfluous color codes
@@ -44,6 +44,38 @@
 			    console.log(delta)
 			    return to_return
 			}
+			function fk_convert(fk) {
+				var Delta = Quill.import('delta');
+				var buffer = fk
+				console.log(this.container.textContent)
+				if (typeof buffer !== 'string') {
+					buffer = this.container.textContent.replace("&amp;", "&");
+					this.container.textContent = ''
+					console.log(buffer)
+				}
+				if (!buffer.match(/^{..}/gm)) {
+					buffer = "{70}" + buffer // Add default color code to beginning of string
+				}
+				var segments = buffer.split(/{(.)(.)}([\s\S]*?)/gm)
+				console.log(segments)
+				var ops = []
+				for (var i=1; i < segments.length; i+=4) {
+					foreground = parseInt(segments[i])
+					background = parseInt(segments[i+1])
+					text = segments[i+3]
+					ops.push({
+						insert: text,
+						attributes: {
+							color: foreground_colors_list[foreground],
+							background: background_colors_list[background]
+						}
+					})
+				}
+				buffer = '';
+				console.log(ops)
+				return new Delta(ops)
+			}
+			quill.clipboard.__proto__.convert = fk_convert
 		</script>
 		<style type="text/css">
 			body {
@@ -69,7 +101,7 @@
 			}
 			.ql-container.ql-snow {
 				border: 1px solid #888;
-				background: #111;
+				background: #000;
 			}
 			.ql-snow .ql-color-picker .ql-picker-options {
 				background: #333;
