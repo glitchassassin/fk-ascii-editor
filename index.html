@@ -75,7 +75,6 @@
 				console.log(ops)
 				return new Delta(ops)
 			}
-			quill.clipboard.__proto__.convert = fk_convert
 		</script>
 		<style type="text/css">
 			body {
@@ -158,6 +157,7 @@
 						}
 					}
 				});
+				quill.clipboard.__proto__.convert = fk_convert
 			</script>
 			<div class="footer"><a href="https://github.com/glitchassassin/fk-ascii-editor">Hosted on GitHub</a></div>
 		</div>
