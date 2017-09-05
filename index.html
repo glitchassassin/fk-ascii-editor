@@ -60,8 +60,8 @@
 				console.log(segments)
 				var ops = []
 				for (var i=1; i < segments.length; i+=4) {
-					foreground = hexstring.indexOf(segments[i].upper())
-					background = hexstring.indexOf(segments[i+1].upper())
+					foreground = hexstring.indexOf(segments[i].toUpperCase())
+					background = hexstring.indexOf(segments[i+1].toUpperCase())
 					text = segments[i+3]
 					ops.push({
 						insert: text,
