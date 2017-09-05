@@ -60,16 +60,19 @@
 				console.log(segments)
 				var ops = []
 				for (var i=1; i < segments.length; i+=4) {
-					foreground = hexstring.indexOf(segments[i].toUpperCase())
-					background = hexstring.indexOf(segments[i+1].toUpperCase())
-					text = segments[i+3]
+					foreground = hexstring.indexOf(segments[i].toUpperCase());
+					background = hexstring.indexOf(segments[i+1].toUpperCase());
+					text = segments[i+3];
+					attributes = {
+						color: foreground_colors_list[foreground]
+					}
+					if (background != 0) {
+						attributes["background"] = background_colors_list[background];
+					}
 					ops.push({
 						insert: text,
-						attributes: {
-							color: foreground_colors_list[foreground],
-							background: background_colors_list[background]
-						}
-					})
+						attributes: attributes
+					});
 				}
 				buffer = '';
 				console.log(ops)
