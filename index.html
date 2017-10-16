@@ -174,7 +174,7 @@
 
 				var export_clipboard = new Clipboard('.ql-export', {
 					text: function() {
-						return delta_to_fk(this.quill.getContents());
+						return delta_to_fk(quill.getContents());
 					}
 				});
 				export_clipboard.on('success', function(e) {
