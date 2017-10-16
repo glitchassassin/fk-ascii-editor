@@ -7,6 +7,7 @@
 		<!-- Main Quill library -->
 		<script src="//cdn.quilljs.com/1.3.1/quill.js"></script>
 		<script src="//cdn.quilljs.com/1.3.1/quill.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 		<link href="https://cdn.quilljs.com/1.3.1/quill.snow.css" rel="stylesheet">
 		<!-- FK Export Parser -->
 		<script>
@@ -163,19 +164,32 @@
 								{'color': foreground_colors_list}, 
 								{'background': background_colors_list}, 
 								{'export': 'Export'},
-								{'export_escaped': 'Export (escaped)'}],
-							handlers: {
-								'export': function(value) {
-									window.prompt("Press Ctrl+C (or Cmd+C) to copy", delta_to_fk(this.quill.getContents()))
-								},
-								'export_escaped': function(value) {
-									window.prompt("Press Ctrl+C (or Cmd+C) to copy", delta_to_fk(this.quill.getContents()).replace(/\\/g, "\\\\"))
-								}
-							}
+								{'export_escaped': 'Export (escaped)'}]
 						}
 					}
 				});
 				quill.clipboard.__proto__.convert = fk_convert
+
+				// Initialize clipboard.js
+
+				var export_clipboard = new Clipboard('.ql-export', {
+					text: function() {
+						return delta_to_fk(this.quill.getContents());
+					}
+				});
+				export_clipboard.on('success', function(e) {
+					alert("Copied to clipboard!");
+				});
+				var export_escaped_clipboard = new Clipboard('.ql-export_escaped', {
+					text: function() {
+						// Escapes "\" and ";"
+						return delta_to_fk(this.quill.getContents()).replace(/\\/g, "\\\\").replace(/;/g, "\\;");
+					}
+				});
+				export_escaped_clipboard.on('success', function(e) {
+					alert("Escaped special characters and copied to clipboard!");
+				});
+
 			</script>
 			<div class="footer"><a href="https://github.com/glitchassassin/fk-ascii-editor">Hosted on GitHub</a></div>
 		</div>
