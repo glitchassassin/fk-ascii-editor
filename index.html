@@ -45,40 +45,67 @@
 			    console.log(delta)
 			    return to_return
 			}
-			function fk_convert(fk) {
-				var Delta = Quill.import('delta');
-				var buffer = fk
-				console.log(this.container.textContent)
-				if (typeof buffer !== 'string') {
-					buffer = this.container.textContent.replace("&amp;", "&");
-					this.container.textContent = ''
-					console.log(buffer)
-				}
-				if (!buffer.match(/^{..}/gm)) {
-					buffer = "{70}" + buffer // Add default color code to beginning of string
-				}
-				var segments = buffer.split(/{(.)(.)}([\s\S]*?)/gm)
-				console.log(segments)
-				var ops = []
-				for (var i=1; i < segments.length; i+=4) {
-					foreground = hexstring.indexOf(segments[i].toUpperCase());
-					background = hexstring.indexOf(segments[i+1].toUpperCase());
-					text = segments[i+3];
-					attributes = {
-						color: foreground_colors_list[foreground]
+			Clipboard = Quill.import('modules/clipboard');
+
+			class FkClipboard extends Clipboard {
+				convert(fk) {
+					var Delta = Quill.import('delta');
+					var buffer = fk
+					console.log(this.container.textContent)
+					if (typeof buffer !== 'string') {
+						buffer = this.container.textContent.replace("&amp;", "&");
+						this.container.textContent = ''
+						console.log(buffer)
 					}
-					if (background != 0) {
-						attributes["background"] = background_colors_list[background];
+					if (!buffer.match(/^{..}/gm)) {
+						buffer = "{70}" + buffer // Add default color code to beginning of string
 					}
-					ops.push({
-						insert: text,
-						attributes: attributes
-					});
+					var segments = buffer.split(/{(.)(.)}([\s\S]*?)/gm)
+					console.log(segments)
+					var ops = []
+					for (var i=1; i < segments.length; i+=4) {
+						foreground = hexstring.indexOf(segments[i].toUpperCase());
+						background = hexstring.indexOf(segments[i+1].toUpperCase());
+						text = segments[i+3];
+						attributes = {
+							color: foreground_colors_list[foreground]
+						}
+						if (background != 0) {
+							attributes["background"] = background_colors_list[background];
+						}
+						ops.push({
+							insert: text,
+							attributes: attributes
+						});
+					}
+					buffer = '';
+					console.log(ops)
+					return new Delta(ops)
 				}
-				buffer = '';
-				console.log(ops)
-				return new Delta(ops)
+				onPaste(e) {
+					if (e.defaultPrevented || !this.quill.isEnabled()) return;
+					e.stopPropagation();
+					e.preventDefault();
+					
+					var clipboardData = e.clipboardData || window.clipboardData;
+					var pastedData = clipboardData.getData('Text');
+					
+					let range = this.quill.getSelection();
+					let delta = new Delta().retain(range.index);
+					let scrollTop = this.quill.scrollingContainer.scrollTop;
+					this.container.focus();
+					this.quill.selection.update(Quill.sources.SILENT);
+					setTimeout(() => {
+					delta = delta.concat(this.convert(pastedData)).delete(range.length);
+					this.quill.updateContents(delta, Quill.sources.USER);
+					// range.length contributes to delta.length()
+					this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
+					this.quill.scrollingContainer.scrollTop = scrollTop;
+					this.quill.focus();
+					}, 1);
+				}
 			}
+			Quill.register('modules/clipboard', FkClipboard, true);
 		</script>
 		<style type="text/css">
 			body {
@@ -168,7 +195,6 @@
 						}
 					}
 				});
-				quill.clipboard.__proto__.convert = fk_convert
 
 				// Initialize clipboard.js
 
