@@ -173,10 +173,7 @@
 			<div id="toolbar">
 				
 			</div>
-			<pre id="editor">
-Hello World!
-Some initial text
-			</pre>
+			<pre id="editor"></pre>
 			
 			<!-- Initialize Quill editor -->
 			<script>
@@ -194,6 +191,8 @@ Some initial text
 						}
 					}
 				});
+
+				quill.clipboard.dangerouslyPasteHTML("{10}Hello {20}World!\n{70}Some initial text")
 
 				// Initialize clipboard.js
 
