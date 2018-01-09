@@ -67,7 +67,7 @@
 						var foreground = hexstring.indexOf(segments[i].toUpperCase());
 						var background = hexstring.indexOf(segments[i+1].toUpperCase());
 						var text = segments[i+3];
-						attributes = {
+						var attributes = {
 							color: foreground_colors_list[foreground]
 						}
 						if (background != 0) {
