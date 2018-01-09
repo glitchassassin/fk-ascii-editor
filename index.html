@@ -45,7 +45,8 @@
 			    console.log(delta)
 			    return to_return
 			}
-			Clipboard = Quill.import('modules/clipboard');
+			var Clipboard = Quill.import('modules/clipboard');
+			var Delta = Quill.import('delta');
 
 			class FkClipboard extends Clipboard {
 				convert(fk) {
@@ -64,8 +65,8 @@
 					console.log(segments)
 					var ops = []
 					for (var i=1; i < segments.length; i+=4) {
-						foreground = hexstring.indexOf(segments[i].toUpperCase());
-						background = hexstring.indexOf(segments[i+1].toUpperCase());
+						var foreground = hexstring.indexOf(segments[i].toUpperCase());
+						var background = hexstring.indexOf(segments[i+1].toUpperCase());
 						text = segments[i+3];
 						attributes = {
 							color: foreground_colors_list[foreground]
