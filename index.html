@@ -45,10 +45,10 @@
 			    console.log(delta)
 			    return to_return
 			}
-			var Clipboard = Quill.import('modules/clipboard');
+			var QClipboard = Quill.import('modules/clipboard');
 			var Delta = Quill.import('delta');
 
-			class FkClipboard extends Clipboard {
+			class FkClipboard extends QClipboard {
 				convert(fk=null) {
 					var buffer = fk
 					console.log(this.container.textContent)
