@@ -194,6 +194,11 @@
 
 				quill.clipboard.dangerouslyPasteHTML("{10}Hello {20}World!\n{70}Some initial text")
 
+				quill.root.addEventListener('copy', function(e){
+					e.clipboardData.setData('text/plain', delta_to_fk(quill.getContents()));
+					e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+				});
+
 				// Initialize clipboard.js
 
 				var export_clipboard = new Clipboard('.ql-export', {
