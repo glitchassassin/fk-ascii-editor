@@ -200,7 +200,7 @@
 						if (range.length == 0) {
 							console.log('User cursor is at index', range.index);
 						} else {
-							var text = quill.getText(range.index, range.length);
+							var text = quill.getContents(range.index, range.length);
 							e.clipboardData.setData('text/plain', delta_to_fk(text));
 							console.log('User has highlighted: ', text);
 						}
