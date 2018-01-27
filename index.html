@@ -195,7 +195,16 @@
 				quill.clipboard.dangerouslyPasteHTML("{10}Hello {20}World!\n{70}Some initial text")
 
 				quill.root.addEventListener('copy', function(e){
-					e.clipboardData.setData('text/plain', delta_to_fk(quill.getContents()));
+					var range = quill.getSelection();
+					if (range) {
+						if (range.length == 0) {
+							console.log('User cursor is at index', range.index);
+						} else {
+							var text = quill.getText(range.index, range.length);
+							e.clipboardData.setData('text/plain', delta_to_fk(text));
+							console.log('User has highlighted: ', text);
+						}
+					}
 					e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
 				});
 
