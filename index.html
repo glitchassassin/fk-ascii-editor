@@ -64,8 +64,8 @@
 					console.log(segments)
 					var ops = []
 					for (var i=1; i < segments.length; i+=4) {
-						var foreground = hexstring.indexOf(segments[i].toUpperCase());
-						var background = hexstring.indexOf(segments[i+1].toUpperCase());
+						var foreground = hexstring.indexOf(segments[i].toUpperCase()) || 0;
+						var background = hexstring.indexOf(segments[i+1].toUpperCase()) || 0;
 						var text = segments[i+3];
 						var attributes = {
 							color: foreground_colors_list[foreground]
